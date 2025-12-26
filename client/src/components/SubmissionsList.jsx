@@ -9,6 +9,10 @@ const SubmissionsList = () => {
     // State for the modal popup
     const [selectedSubmission, setSelectedSubmission] = useState(null);
 
+    // State for AI Reply
+    const [aiReply, setAiReply] = useState("");
+    const [generatingAi, setGeneratingAi] = useState(false);
+
     // State for filtering (Tabs)
     const [filter, setFilter] = useState('new'); // 'new' or 'resolved'
 
@@ -37,11 +41,40 @@ const SubmissionsList = () => {
     // Handle clicking on a row to open modal
     const handleRowClick = (submission) => {
         setSelectedSubmission(submission);
+        setAiReply(""); // Reset AI reply when opening new
     };
 
     // Close the details modal
     const closeModal = () => {
         setSelectedSubmission(null);
+        setAiReply("");
+    };
+
+    const handleGenerateAiReply = async () => {
+        if (!selectedSubmission) return;
+        setGeneratingAi(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/ai-reply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: selectedSubmission.name,
+                    subject: selectedSubmission.subject,
+                    message: selectedSubmission.message
+                })
+            });
+            const data = await response.json();
+            if (data.reply) {
+                setAiReply(data.reply);
+            } else {
+                alert("Failed to generate AI reply.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error connecting to AI service.");
+        } finally {
+            setGeneratingAi(false);
+        }
     };
 
     // Mark a ticket as Resolved
@@ -174,6 +207,29 @@ const SubmissionsList = () => {
                             <p><strong>Message:</strong></p>
                             <div className="message-content">
                                 {selectedSubmission.message}
+                            </div>
+
+                            {/* AI Quick Reply Section */}
+                            <div className="ai-reply-section">
+                                <hr />
+                                <div className="ai-header">
+                                    <h4>Quick Reply</h4>
+                                    <button
+                                        className="btn-ai-generate"
+                                        onClick={handleGenerateAiReply}
+                                        disabled={generatingAi}
+                                    >
+                                        {generatingAi ? '✨ Generating...' : '✨ Generate AI Reply'}
+                                    </button>
+                                </div>
+                                {aiReply && (
+                                    <textarea
+                                        className="ai-reply-box"
+                                        value={aiReply}
+                                        readOnly
+                                        rows={6}
+                                    />
+                                )}
                             </div>
                         </div>
                         <div className="modal-footer">

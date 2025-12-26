@@ -3,11 +3,17 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+// Import dotenv and Gemini
+require('dotenv').config();
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Initialize the Express app
 const app = express();
 const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
+
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 // Middleware Setup
 // Enabling CORS so frontend (port 5173) can talk to backend (port 3000)
@@ -161,6 +167,43 @@ app.delete('/api/contact/:id', (req, res) => {
 
     writeData(data);
     res.json({ message: "Submission deleted" });
+});
+
+// POST /api/ai-reply
+// Description: Uses Gemini to generate a quick reply
+app.post('/api/ai-reply', async (req, res) => {
+    const { name, subject, message } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "Server missing API Key." });
+    }
+
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
+        const prompt = `
+        You are a helpful support agent for a Contact Form application.
+        Draft a polite, professional, and concise email reply to the following user inquiry.
+        
+        User Name: ${name}
+        Subject: ${subject}
+        Message: "${message}"
+        
+        The reply should:
+        1. Thank them for contacting us.
+        2. Address their specific message.
+        3. Be ready to copy-paste (no placeholders).
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        res.json({ reply: text });
+    } catch (error) {
+        console.error("AI Generation Error:", error);
+        res.status(500).json({ error: "Failed to generate AI reply." });
+    }
 });
 
 // Start the server

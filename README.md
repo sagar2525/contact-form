@@ -2,7 +2,7 @@
 
 This is a complete Contact Form application where users can send messages and an Admin can manage them.
 
-## Features Application
+## Features of the Application
 1.  **Contact Form**: Users can submit their Name, Email, Subject, and Message.
 2.  **Validation**: Checks if email is valid and message is long enough.
 3.  **Admin Dashboard**: A private area to see all messages.
@@ -10,6 +10,7 @@ This is a complete Contact Form application where users can send messages and an
 5.  **Manage Tickets**:
     *   **Resolve Ticket**: You can mark a ticket as "Resolved" to keep track of work.
     *   **Delete Button**: You can permanently delete spam or unwanted messages.
+6.  **AI Quick Reply**: Automatically generate polite, professional replies using Google Gemini AI!
 
 ---
 
@@ -17,8 +18,17 @@ This is a complete Contact Form application where users can send messages and an
 
 You need **Node.js** installed on your computer.
 
-### Step 1: Start the Server (Backend)
-This handles saving and loading the data.
+### Step 1: Configure AI Key (Important)
+To use the "AI Quick Reply" feature, you need to add your API Key.
+1.  Go to the `server` folder.
+2.  Open the file named `.env`.
+3.  Paste your **Gemini API Key** inside it like this:
+    ```
+    GEMINI_API_KEY=your_actual_api_key_here
+    ```
+
+### Step 2: Start the Server (Backend)
+This handles saving data and the AI logic.
 
 1.  Open a terminal/command prompt.
 2.  Go to the server folder:
@@ -35,7 +45,7 @@ This handles saving and loading the data.
     ```
     *It will say: "Server running on http://localhost:3000"*
 
-### Step 2: Start the Website (Frontend)
+### Step 3: Start the Website (Frontend)
 This is what you see in the browser.
 
 1.  Open a **new** terminal window.
@@ -56,7 +66,7 @@ This is what you see in the browser.
 ---
 
 ## Admin Login Details
-To test the Admin features (Resolve/Delete), use these details:
+To test the Admin features (Resolve, Delete, AI Reply), use these details:
 
 *   **Email:** `admin123@gmail.com`
 *   **Password:** `adminsagar123`
