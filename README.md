@@ -70,3 +70,5 @@ To test the Admin features (Resolve, Delete, AI Reply), use these details:
 
 *   **Email:** `admin123@gmail.com`
 *   **Password:** `adminsagar123`
+## Time Spent on Project 
+Approximately 1 to 1.5 hours, including core implementation and additional feature enhancements.
