@@ -1,0 +1,13 @@
+{
+  "submissions": [
+    {
+      "id": 1,
+      "name": "sagar singh kushwaha",
+      "email": "sagarkushwah2510@gmail.com",
+      "subject": "Technical Support",
+      "message": "How to call API ?",
+      "status": "new",
+      "createdAt": "2025-12-26T06:17:09.631Z"
+    }
+  ]
+}
